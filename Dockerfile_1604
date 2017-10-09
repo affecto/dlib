@@ -1,0 +1,30 @@
+ARG CUDA_VERSION=9.0
+ARG CUDNN_VERSION=7
+FROM nvidia/cuda:${CUDA_VERSION}-cudnn${CUDNN_VERSION}-devel-ubuntu16.04
+
+# REMINDER: DO NOT RUN dist-upgrade
+
+# Install compilers
+RUN apt-get update \
+    && apt-get install -y \
+       git-core \
+       build-essential \
+       cmake \
+       pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install compile dependencies
+RUN apt-get update \
+    && apt-get install -y \
+       libopenblas-dev \
+       liblapack-dev \
+       libx11-dev \
+       python3-dev \
+       libboost-python-dev \
+       python3-pip \
+    && rm -rf /var/lib/apt/lists/* \
+    pip3 install wheel twine
+
+COPY ./ /opt/compile/dlib
+WORKDIR /opt/compile/dlib
+ENTRYPOINT ["/opt/compile/dlib/docker-entrypoint.sh"]
