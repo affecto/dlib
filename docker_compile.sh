@@ -48,3 +48,8 @@ else
 	docker start -i $CONTNAME
   set +x
 fi
+# Copy the file to a safe place
+SAVEDIR=wheels/$TGTPLAT/$CUDA_VERSION/$CUDNN_VERSION
+mkdir -p $SAVEDIR
+set -x
+cp dist/*.whl $SAVEDIR
